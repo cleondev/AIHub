@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/AIHub.Api/bin/Debug/net10.0
+/src/AIHub.Api/obj
