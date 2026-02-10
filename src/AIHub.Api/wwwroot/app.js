@@ -153,45 +153,33 @@ bind("btn-send-chat").addEventListener("click", async () => {
   }
 });
 
-bind("btn-mock-create").addEventListener("click", async () => {
-  const name = bind("mock-name").value.trim();
+bind("btn-mock-list-products").addEventListener("click", async () => {
+  const keyword = bind("mock-keyword").value.trim();
   const target = bind("mock-result");
-  if (!name) {
-    target.textContent = "Vui lòng nhập tên request.";
+
+  try {
+    const data = await callApi(`/module/mock-api/products?keyword=${encodeURIComponent(keyword)}`);
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-mock-create-order").addEventListener("click", async () => {
+  const productId = bind("mock-product-id").value.trim();
+  const quantity = Number(bind("mock-quantity").value);
+  const target = bind("mock-result");
+
+  if (!productId || !quantity) {
+    target.textContent = "Vui lòng nhập Product ID và số lượng mua.";
     return;
   }
 
   try {
-    const data = await callApi("/module/mock-api/create", {
+    const data = await callApi("/module/mock-api/purchase-requests", {
       method: "POST",
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ productId, quantity })
     });
-    target.textContent = pretty(data);
-    bind("mock-approve-id").value = data.data.id;
-    bind("tool-approve-id").value = data.data.id;
-  } catch (error) {
-    target.textContent = error.message;
-  }
-});
-
-bind("btn-mock-query").addEventListener("click", async () => {
-  const keyword = bind("mock-name").value.trim();
-  const target = bind("mock-result");
-
-  try {
-    const data = await callApi(`/module/mock-api/query?keyword=${encodeURIComponent(keyword)}`);
-    target.textContent = pretty(data);
-  } catch (error) {
-    target.textContent = error.message;
-  }
-});
-
-bind("btn-mock-approve").addEventListener("click", async () => {
-  const id = bind("mock-approve-id").value.trim();
-  const target = bind("mock-result");
-
-  try {
-    const data = await callApi(`/module/mock-api/approve/${id}`, { method: "POST" });
     target.textContent = pretty(data);
   } catch (error) {
     target.textContent = error.message;

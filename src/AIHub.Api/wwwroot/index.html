@@ -10,7 +10,7 @@
   <main class="container">
     <header>
       <h1>AIHub Dashboard (Modular)</h1>
-      <p>Demo 4 module riêng: Management, ChatBox, Mock API, Tool Gateway.</p>
+      <p>Demo 4 module riêng: Management, ChatBox, Mock API mô phỏng mua hàng, Tool Gateway.</p>
     </header>
 
     <section class="grid">
@@ -41,14 +41,12 @@
       </article>
 
       <article class="card">
-        <h2>3) Module Mock API</h2>
-        <input id="mock-name" type="text" placeholder="Tên request (VD: def)" />
-        <div class="button-row">
-          <button id="btn-mock-create">Create</button>
-          <button id="btn-mock-query">Query</button>
-        </div>
-        <input id="mock-approve-id" type="text" placeholder="Request ID để approve" />
-        <button id="btn-mock-approve">Approve</button>
+        <h2>3) Module Mock API (Sản phẩm mua hàng)</h2>
+        <input id="mock-keyword" type="text" placeholder="Tìm theo tên/SKU sản phẩm" />
+        <button id="btn-mock-list-products">List products</button>
+        <input id="mock-product-id" type="text" placeholder="Product ID" />
+        <input id="mock-quantity" type="number" min="1" value="1" placeholder="Số lượng mua" />
+        <button id="btn-mock-create-order">Tạo request mua hàng</button>
         <pre id="mock-result">Chưa có dữ liệu.</pre>
       </article>
 
@@ -69,8 +67,9 @@
         <ol>
           <li>Mở Management, thêm khái niệm <strong>abc</strong>.</li>
           <li>Qua ChatBox nhập: <code>liệt kê abc</code> để AI query API và trả thông tin.</li>
-          <li>Nhập tiếp: <code>tạo def</code> → tạo request trạng thái <strong>Pending</strong>.</li>
-          <li>Người dùng dùng lệnh <code>approve &lt;request-id&gt;</code> hoặc nút approve để chuyển sang <strong>Approved</strong>.</li>
+          <li>Qua Mock API, bấm <strong>List products</strong> để xem tồn kho hiện tại.</li>
+          <li>Nhập <code>Product ID</code> + số lượng rồi tạo request mua hàng.</li>
+          <li>Nếu số lượng vượt tồn kho, API trả trạng thái <strong>RejectedOutOfStock</strong>.</li>
         </ol>
       </article>
     </section>
