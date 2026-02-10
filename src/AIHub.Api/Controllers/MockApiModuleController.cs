@@ -15,28 +15,27 @@ public sealed class MockApiModuleController : ControllerBase
         _mockApiService = mockApiService;
     }
 
-    [HttpGet("query")]
-    public ActionResult<ApiResponse<IEnumerable<MockRequest>>> Query([FromQuery] string? keyword)
+    [HttpGet("products")]
+    public ActionResult<ApiResponse<IEnumerable<ProductItem>>> ListProducts([FromQuery] string? keyword)
     {
-        return Ok(ApiResponse.From(_mockApiService.Query(keyword), TraceIdProvider.GetFromHttpContext(HttpContext)));
+        return Ok(ApiResponse.From(_mockApiService.ListProducts(keyword), TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
-    [HttpPost("create")]
-    public ActionResult<ApiResponse<MockRequest>> Create([FromBody] MockCreateRequest request)
+    [HttpPost("purchase-requests")]
+    public ActionResult<ApiResponse<PurchaseRequest>> CreatePurchaseRequest([FromBody] PurchaseCreateRequest request)
     {
-        var created = _mockApiService.Create(request.Name);
-        return Ok(ApiResponse.From(created, TraceIdProvider.GetFromHttpContext(HttpContext)));
-    }
-
-    [HttpPost("approve/{id:guid}")]
-    public ActionResult<ApiResponse<object>> Approve([FromRoute] Guid id)
-    {
-        var approved = _mockApiService.Approve(id);
-        if (approved is null)
+        try
         {
-            return NotFound(ApiResponse.From(new ErrorResponse("not_found", "Không tìm thấy request."), TraceIdProvider.GetFromHttpContext(HttpContext)));
+            var created = _mockApiService.CreatePurchaseRequest(request.ProductId, request.Quantity);
+            return Ok(ApiResponse.From(created, TraceIdProvider.GetFromHttpContext(HttpContext)));
         }
-
-        return Ok(ApiResponse.From<object>(approved, TraceIdProvider.GetFromHttpContext(HttpContext)));
+        catch (KeyNotFoundException)
+        {
+            return NotFound(ApiResponse.From(new ErrorResponse("product_not_found", "Không tìm thấy sản phẩm."), TraceIdProvider.GetFromHttpContext(HttpContext)));
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(ApiResponse.From(new ErrorResponse("invalid_quantity", ex.Message), TraceIdProvider.GetFromHttpContext(HttpContext)));
+        }
     }
 }

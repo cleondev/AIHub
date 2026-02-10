@@ -9,3 +9,5 @@ public sealed record SetLlmConfigRequest(string Provider, string Model, string A
 public sealed record ChatMessageRequest(string Message);
 
 public sealed record MockCreateRequest(string Name);
+
+public sealed record PurchaseCreateRequest(Guid ProductId, int Quantity);
