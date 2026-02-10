@@ -3,55 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AIHub - Giao diện MVP</title>
+  <title>AIHub - Modular MVP</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="container">
     <header>
-      <h1>AIHub Dashboard</h1>
-      <p>Giao diện thao tác nhanh cho các API MVP.</p>
+      <h1>AIHub Dashboard (Modular)</h1>
+      <p>Demo 4 module riêng: Management, ChatBox, Mock API, Tool Gateway.</p>
     </header>
 
     <section class="grid">
-      <article class="card">
-        <h2>Trạng thái hệ thống</h2>
-        <button id="btn-health">Kiểm tra Health</button>
-        <pre id="health-result">Chưa kiểm tra.</pre>
-      </article>
-
-      <article class="card">
-        <h2>Knowledge Query</h2>
-        <label for="knowledge-query">Câu hỏi</label>
-        <textarea id="knowledge-query" rows="3" placeholder="Nhập câu hỏi..."></textarea>
-        <button id="btn-query">Gửi truy vấn</button>
-        <pre id="query-result">Chưa có dữ liệu.</pre>
-      </article>
-
-      <article class="card">
-        <h2>Thêm thuật ngữ</h2>
-        <label for="term-name">Thuật ngữ</label>
-        <input id="term-name" type="text" placeholder="VD: RAG" />
-        <label for="term-definition">Định nghĩa</label>
-        <textarea id="term-definition" rows="3" placeholder="Mô tả thuật ngữ..."></textarea>
-        <button id="btn-term">Tạo thuật ngữ</button>
-        <pre id="term-result">Chưa có dữ liệu.</pre>
-      </article>
-
-      <article class="card">
-        <h2>Danh sách thuật ngữ</h2>
-        <button id="btn-load-terms">Tải danh sách</button>
-        <ul id="term-list"></ul>
-      </article>
-
-      <article class="card">
-        <h2>Tool tương tác DB/API (Mock)</h2>
-        <p>Dữ liệu được mô phỏng tạm thời từ file text local.</p>
+      <article class="card card-wide">
+        <h2>1) Module Management</h2>
+        <label for="concept-name">Thêm khái niệm</label>
         <div class="button-row">
-          <button id="btn-tool-db">Tải mock DB tool</button>
-          <button id="btn-tool-api">Tải mock API tool</button>
+          <input id="concept-name" type="text" placeholder="VD: abc" />
+          <button id="btn-add-concept">Thêm</button>
+          <button id="btn-list-concepts">Liệt kê</button>
         </div>
+        <label for="llm-model">LLM config (tạm dùng minimax)</label>
+        <div class="button-row">
+          <input id="llm-model" type="text" value="MiniMax-Text-01" />
+          <button id="btn-set-llm">Cập nhật LLM</button>
+          <button id="btn-get-llm">Xem LLM</button>
+        </div>
+        <pre id="management-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card">
+        <h2>2) Module ChatBox</h2>
+        <textarea id="chat-input" rows="4" placeholder="VD: liệt kê abc / tạo def / approve <id>"></textarea>
+        <button id="btn-send-chat">Gửi chat</button>
+        <pre id="chat-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card">
+        <h2>3) Module Mock API</h2>
+        <input id="mock-name" type="text" placeholder="Tên request (VD: def)" />
+        <div class="button-row">
+          <button id="btn-mock-create">Create</button>
+          <button id="btn-mock-query">Query</button>
+        </div>
+        <input id="mock-approve-id" type="text" placeholder="Request ID để approve" />
+        <button id="btn-mock-approve">Approve</button>
+        <pre id="mock-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card">
+        <h2>4) Module Tool (Read/Write API)</h2>
+        <input id="tool-keyword" type="text" placeholder="Từ khóa đọc API" />
+        <div class="button-row">
+          <button id="btn-tool-read">Tool Read</button>
+          <button id="btn-tool-create">Tool Write Create</button>
+        </div>
+        <input id="tool-approve-id" type="text" placeholder="Request ID để Tool Approve" />
+        <button id="btn-tool-approve">Tool Write Approve</button>
         <pre id="tool-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card card-wide">
+        <h2>Kịch bản kỳ vọng</h2>
+        <ol>
+          <li>Mở Management, thêm khái niệm <strong>abc</strong>.</li>
+          <li>Qua ChatBox nhập: <code>liệt kê abc</code> để AI query API và trả thông tin.</li>
+          <li>Nhập tiếp: <code>tạo def</code> → tạo request trạng thái <strong>Pending</strong>.</li>
+          <li>Người dùng dùng lệnh <code>approve &lt;request-id&gt;</code> hoặc nút approve để chuyển sang <strong>Approved</strong>.</li>
+        </ol>
       </article>
     </section>
   </main>
