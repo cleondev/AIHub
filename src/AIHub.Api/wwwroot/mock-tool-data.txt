@@ -1,0 +1,5 @@
+# TOOL_INTERACTION_MOCK
+DB|name=GetCustomerOrders|description=Truy vấn đơn hàng theo customer_id|query=SELECT order_id,total,status FROM orders WHERE customer_id = :customer_id LIMIT 5;|sample_result=[{"order_id":"ORD-1001","total":1250000,"status":"completed"},{"order_id":"ORD-1002","total":540000,"status":"pending"}]
+DB|name=UpdateInventory|description=Cập nhật tồn kho khi có đơn hàng|query=UPDATE inventory SET quantity = quantity - :qty WHERE sku = :sku;|sample_result={"affected_rows":1,"sku":"SKU-AI-001","quantity_after":42}
+API|name=GetCustomerProfile|description=Lấy hồ sơ khách hàng từ CRM|method=GET|endpoint=/external/crm/customers/{customerId}|sample_response={"customerId":"CUS-09","name":"Nguyen Van A","tier":"gold"}
+API|name=PushOrderEvent|description=Đẩy sự kiện đơn hàng sang hệ thống BI|method=POST|endpoint=/external/bi/order-events|sample_response={"eventId":"EV-7788","status":"queued"}
