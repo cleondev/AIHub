@@ -17,6 +17,25 @@ async function callApi(path, options = {}) {
 
 const bind = (id) => document.getElementById(id);
 
+const tabButtons = document.querySelectorAll(".tab-button");
+const tabPanels = document.querySelectorAll(".tab-panel");
+
+const activateTab = (tabName) => {
+  tabButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tabName);
+  });
+
+  tabPanels.forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.panel === tabName);
+  });
+};
+
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => activateTab(button.dataset.tab));
+});
+
+activateTab("chat");
+
 bind("btn-add-concept").addEventListener("click", async () => {
   const name = bind("concept-name").value.trim();
   const target = bind("management-result");
@@ -153,7 +172,7 @@ bind("btn-send-chat").addEventListener("click", async () => {
   }
 });
 
-bind("btn-mock-list-products").addEventListener("click", async () => {
+const loadProducts = async () => {
   const keyword = bind("mock-keyword").value.trim();
   const target = bind("mock-result");
 
@@ -163,7 +182,22 @@ bind("btn-mock-list-products").addEventListener("click", async () => {
   } catch (error) {
     target.textContent = error.message;
   }
-});
+};
+
+const loadOrders = async () => {
+  const target = bind("orders-result");
+
+  try {
+    const data = await callApi("/module/mock-api/purchase-requests");
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+};
+
+bind("btn-mock-list-products").addEventListener("click", loadProducts);
+bind("btn-mock-list-orders").addEventListener("click", loadOrders);
+bind("btn-mock-refresh-orders").addEventListener("click", loadOrders);
 
 bind("btn-mock-create-order").addEventListener("click", async () => {
   const productId = bind("mock-product-id").value.trim();
@@ -181,6 +215,7 @@ bind("btn-mock-create-order").addEventListener("click", async () => {
       body: JSON.stringify({ productId, quantity })
     });
     target.textContent = pretty(data);
+    await loadOrders();
   } catch (error) {
     target.textContent = error.message;
   }

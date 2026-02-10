@@ -23,10 +23,35 @@ h1 {
   margin-bottom: 8px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tab-button {
+  border: 1px solid #c8d1ea;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #fff;
+  color: #425179;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab-button.active {
+  background: #3d63ff;
+  color: #fff;
+  border-color: #3d63ff;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
 }
 
 .card {
@@ -37,10 +62,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.card-wide {
-  grid-column: 1 / -1;
 }
 
 button {

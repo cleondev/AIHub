@@ -21,6 +21,13 @@ public sealed class MockApiModuleController : ControllerBase
         return Ok(ApiResponse.From(_mockApiService.ListProducts(keyword), TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
+
+    [HttpGet("purchase-requests")]
+    public ActionResult<ApiResponse<IEnumerable<PurchaseRequest>>> ListPurchaseRequests()
+    {
+        return Ok(ApiResponse.From(_mockApiService.ListPurchaseRequests(), TraceIdProvider.GetFromHttpContext(HttpContext)));
+    }
+
     [HttpPost("purchase-requests")]
     public ActionResult<ApiResponse<PurchaseRequest>> CreatePurchaseRequest([FromBody] PurchaseCreateRequest request)
     {
