@@ -94,8 +94,7 @@ public sealed class RequestWorkflowPlugin : ISemanticKernelPlugin
     public bool CanHandle(string intent, string message)
     {
         return string.Equals(intent, "CreateRequest", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(intent, "Approval", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(intent, "GeneralChat", StringComparison.OrdinalIgnoreCase);
+               || string.Equals(intent, "Approval", StringComparison.OrdinalIgnoreCase);
     }
 
     public Task<KernelExecutionResult?> ExecuteAsync(AIRequestEnvelope envelope, string intent, CancellationToken cancellationToken = default)
@@ -150,20 +149,7 @@ public sealed class RequestWorkflowPlugin : ISemanticKernelPlugin
             return Task.FromResult<KernelExecutionResult?>(approvalResult);
         }
 
-        var matched = _toolGateway.ReadRequests(normalized).ToList();
-        if (matched.Count == 0)
-        {
-            return Task.FromResult<KernelExecutionResult?>(null);
-        }
-
-        KernelExecutionResult queryResult = new(
-            $"Đã query API và thấy {matched.Count} bản ghi liên quan '{normalized}'.",
-            matched,
-            "plugin:workflow",
-            ["mock-api:request-query"],
-            [new ToolCallTrace("ToolGateway.ReadRequests", new { keyword = normalized }, matched, true)]);
-
-        return Task.FromResult<KernelExecutionResult?>(queryResult);
+        return Task.FromResult<KernelExecutionResult?>(null);
     }
 }
 
