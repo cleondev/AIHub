@@ -6,6 +6,7 @@ Tài liệu mô tả hệ thống (MVP) nằm trong thư mục `docs/`:
 - [Mô hình dữ liệu](docs/03-mo-hinh-du-lieu.md)
 - [API MVP](docs/04-api-mvp.md)
 - [Tài liệu chi tiết hệ thống](docs/05-tai-lieu-chi-tiet-he-thong.md)
+- [Thiết kế điều chỉnh cho kịch bản FoxTS](docs/07-thiet-ke-foxts-enterprise.md)
 
 ## Cấu trúc tách module/project
 Solution đã tách thành các project riêng biệt:
