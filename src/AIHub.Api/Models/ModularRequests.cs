@@ -6,7 +6,14 @@ public sealed record AddToolRequest(string Name, string Description);
 
 public sealed record SetLlmConfigRequest(string Provider, string Model, string ApiBaseUrl);
 
-public sealed record ChatMessageRequest(string Message);
+public sealed record ChatMessageRequest(
+    string Message,
+    string? UserId = null,
+    IReadOnlyList<string>? Roles = null,
+    string? TenantId = null,
+    string? Environment = null,
+    bool RequireCitation = true,
+    bool AllowExternalModel = true);
 
 public sealed record MockCreateRequest(string Name);
 
