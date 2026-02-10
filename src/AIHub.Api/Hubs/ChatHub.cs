@@ -45,7 +45,7 @@ public sealed class ChatHub : Hub
                 : ["reader"]);
 
         var tenant = new TenantContext("default-tenant", "dev");
-        var policy = new PolicyContext("v1", requireCitation: false, allowExternalModel: true);
+        var policy = new PolicyContext("v1", false, true);
         var trace = new TraceContext(Context.ConnectionId, Context.ConnectionId);
 
         var reply = await _chatBoxService.SendAsync(normalized, user, tenant, policy, trace, Context.ConnectionAborted);
