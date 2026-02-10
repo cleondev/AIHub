@@ -189,21 +189,22 @@ public sealed class MinimaxChatService : IMinimaxChatService
 
     private static string BuildSystemPrompt(string userMessage)
     {
-        return $"""
-Bạn là trợ lý bán hàng AI. Bạn có thể gọi tool nội bộ bằng cách CHỈ trả về JSON với schema:
-{{"tool":"list_products","keyword":"...","name":"...","category":"..."}}
-hoặc
-{{"tool":"create_order","productId":"guid","quantity":1}}
+        return $$$"""
+            Bạn là trợ lý bán hàng AI. Bạn có thể gọi tool nội bộ bằng cách CHỈ trả về JSON với schema:
+            {{"tool":"list_products","keyword":"...","name":"...","category":"..."}}
+            hoặc
+            {{"tool":"create_order","productId":"guid","quantity":1}}
 
-Quy tắc:
-- Nếu user hỏi danh sách/sản phẩm/tồn kho, hãy gọi list_products trước.
-- Khi user chỉ định tên/category thì map vào trường name/category.
-- Nếu user muốn tạo request/order mua hàng, gọi create_order.
-- Khi đã nhận [TOOL_RESULT], hãy trả lời tiếng Việt cho user (không JSON nữa).
+            Quy tắc:
+            - Nếu user hỏi danh sách/sản phẩm/tồn kho, hãy gọi list_products trước.
+            - Khi user chỉ định tên/category thì map vào trường name/category.
+            - Nếu user muốn tạo request/order mua hàng, gọi create_order.
+            - Khi đã nhận [TOOL_RESULT], hãy trả lời tiếng Việt cho user (không JSON nữa).
 
-Yêu cầu người dùng: {userMessage}
-""";
+            Yêu cầu người dùng: {{userMessage}}
+            """;
     }
+
 
     private static ToolRequest? TryParseToolRequest(string text)
     {
