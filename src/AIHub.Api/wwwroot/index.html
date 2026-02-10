@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIHub - Giao diện MVP</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>AIHub Dashboard</h1>
+      <p>Giao diện thao tác nhanh cho các API MVP.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Trạng thái hệ thống</h2>
+        <button id="btn-health">Kiểm tra Health</button>
+        <pre id="health-result">Chưa kiểm tra.</pre>
+      </article>
+
+      <article class="card">
+        <h2>Knowledge Query</h2>
+        <label for="knowledge-query">Câu hỏi</label>
+        <textarea id="knowledge-query" rows="3" placeholder="Nhập câu hỏi..."></textarea>
+        <button id="btn-query">Gửi truy vấn</button>
+        <pre id="query-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card">
+        <h2>Thêm thuật ngữ</h2>
+        <label for="term-name">Thuật ngữ</label>
+        <input id="term-name" type="text" placeholder="VD: RAG" />
+        <label for="term-definition">Định nghĩa</label>
+        <textarea id="term-definition" rows="3" placeholder="Mô tả thuật ngữ..."></textarea>
+        <button id="btn-term">Tạo thuật ngữ</button>
+        <pre id="term-result">Chưa có dữ liệu.</pre>
+      </article>
+
+      <article class="card">
+        <h2>Danh sách thuật ngữ</h2>
+        <button id="btn-load-terms">Tải danh sách</button>
+        <ul id="term-list"></ul>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
