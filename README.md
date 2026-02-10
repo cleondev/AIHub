@@ -52,3 +52,21 @@ Sau khi nhập `API key` + `Group ID` ở tab **Quản lý** (hoặc set env), C
 LLM sẽ thực hiện tool-call đến mock API:
 - `list_products(keyword,name,category)`
 - `create_order(productId,quantity)`
+
+## Aspire orchestration (chatbot + product API)
+- `AIHub.AppHost`: Aspire host để chạy 2 service riêng biệt:
+  - `AIHub.Api` (chat bot service)
+  - `AIHub.ProductApi` (product/order API service)
+- `AIHub.ProductApi` đã bật Swagger tại `/swagger`.
+
+Các API chính của `AIHub.ProductApi`:
+- Nhóm `products`:
+  - `GET /api/products`
+  - `GET /api/products/{id}`
+  - `POST /api/products`
+  - `PUT /api/products/{id}`
+- Nhóm `orders`:
+  - `GET /api/orders`
+  - `GET /api/orders/{id}`
+  - `POST /api/orders`
+  - `PUT /api/orders/{id}`
