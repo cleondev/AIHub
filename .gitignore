@@ -3,5 +3,5 @@
 ################################################################################
 
 /.vs
-/src/AIHub.Api/bin/Debug/net10.0
+/src/AIHub.Api/bin
 /src/AIHub.Api/obj
