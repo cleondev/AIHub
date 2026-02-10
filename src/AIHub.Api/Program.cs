@@ -31,6 +31,8 @@ builder.Services.AddScoped<IModelProfileService, ModelProfileService>();
 builder.Services.AddSingleton<IManagementService, ManagementService>();
 builder.Services.AddSingleton<IMockApiService, MockApiService>();
 builder.Services.AddSingleton<IToolGateway, ToolGateway>();
+builder.Services.AddHttpClient<IMinimaxChatService, MinimaxChatService>();
+builder.Services.AddSingleton<IExternalChatService, ExternalChatServiceAdapter>();
 builder.Services.AddSingleton<IChatBoxService, ChatBoxService>();
 
 var app = builder.Build();

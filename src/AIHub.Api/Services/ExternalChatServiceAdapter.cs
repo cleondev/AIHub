@@ -1,0 +1,18 @@
+using AIHub.Modules.ChatBox;
+
+namespace AIHub.Api.Services;
+
+public sealed class ExternalChatServiceAdapter : IExternalChatService
+{
+    private readonly IMinimaxChatService _minimaxChatService;
+
+    public ExternalChatServiceAdapter(IMinimaxChatService minimaxChatService)
+    {
+        _minimaxChatService = minimaxChatService;
+    }
+
+    public Task<string?> ReplyAsync(string message, CancellationToken cancellationToken = default)
+    {
+        return _minimaxChatService.TrySendAsync(message, cancellationToken);
+    }
+}

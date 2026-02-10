@@ -32,7 +32,7 @@ public sealed class ChatHub : Hub
         var userMessage = _chatStore.Append("Bạn", normalized);
         await Clients.All.SendAsync("chat_message", userMessage);
 
-        var reply = _chatBoxService.Send(normalized);
+        var reply = await _chatBoxService.SendAsync(normalized);
         var botMessage = _chatStore.Append("AIHub", reply.Message);
         await Clients.All.SendAsync("chat_message", botMessage);
     }
