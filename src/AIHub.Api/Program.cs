@@ -15,6 +15,7 @@ using AIHub.Modules.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<InMemoryStore>();
@@ -45,6 +46,7 @@ builder.Services.AddSingleton<IChatBoxService, ChatBoxService>();
 
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

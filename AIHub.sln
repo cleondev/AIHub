@@ -14,6 +14,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIHub.Modules.Tooling", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIHub.Modules.SemanticKernel", "src\AIHub.Modules.SemanticKernel\AIHub.Modules.SemanticKernel.csproj", "{C2B2D73E-7C88-4E86-8E72-F4C83498FCF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIHub.ProductApi", "src\AIHub.ProductApi\AIHub.ProductApi.csproj", "{8E58E9D2-72C3-4B44-99B3-61A2DD65DBA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIHub.ServiceDefaults", "src\AIHub.ServiceDefaults\AIHub.ServiceDefaults.csproj", "{AAAC3D6E-EAB3-4448-B58B-9E5434F3CDE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIHub.AppHost", "src\AIHub.AppHost\AIHub.AppHost.csproj", "{B0931235-0347-42A8-968D-BDAE343CBD02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +50,17 @@ Global
 		{C2B2D73E-7C88-4E86-8E72-F4C83498FCF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B2D73E-7C88-4E86-8E72-F4C83498FCF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B2D73E-7C88-4E86-8E72-F4C83498FCF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E58E9D2-72C3-4B44-99B3-61A2DD65DBA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E58E9D2-72C3-4B44-99B3-61A2DD65DBA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E58E9D2-72C3-4B44-99B3-61A2DD65DBA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E58E9D2-72C3-4B44-99B3-61A2DD65DBA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAAC3D6E-EAB3-4448-B58B-9E5434F3CDE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAAC3D6E-EAB3-4448-B58B-9E5434F3CDE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAAC3D6E-EAB3-4448-B58B-9E5434F3CDE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAAC3D6E-EAB3-4448-B58B-9E5434F3CDE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0931235-0347-42A8-968D-BDAE343CBD02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0931235-0347-42A8-968D-BDAE343CBD02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0931235-0347-42A8-968D-BDAE343CBD02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0931235-0347-42A8-968D-BDAE343CBD02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
