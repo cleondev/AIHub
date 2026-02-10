@@ -37,7 +37,7 @@ public sealed class ManagementModuleController : ControllerBase
     [HttpPost("llm-config")]
     public ActionResult<ApiResponse<LlmProviderConfig>> SetLlmConfig([FromBody] SetLlmConfigRequest request)
     {
-        var config = _managementService.SetLlmConfig(new LlmProviderConfig(request.Provider, request.Model, request.ApiBaseUrl));
+        var config = _managementService.SetLlmConfig(new LlmProviderConfig(request.Provider, request.Model, request.ApiBaseUrl, request.ApiKey, request.GroupId));
         return Ok(ApiResponse.From(config, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 

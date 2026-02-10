@@ -11,9 +11,11 @@ public sealed record ChatReply(
     IReadOnlyList<string>? Citations = null,
     IReadOnlyList<ToolCallTrace>? ToolCalls = null);
 
+public sealed record ExternalChatResult(string Message, IReadOnlyList<ToolCallTrace> ToolCalls);
+
 public interface IExternalChatService
 {
-    Task<string?> ReplyAsync(string message, CancellationToken cancellationToken = default);
+    Task<ExternalChatResult?> ReplyAsync(string message, CancellationToken cancellationToken = default);
 }
 
 public interface IChatBoxService
@@ -186,16 +188,22 @@ public sealed class ExternalChatPlugin : ISemanticKernelPlugin
         }
 
         var externalReply = await _externalChatService.ReplyAsync(envelope.Message.Trim(), cancellationToken);
-        if (string.IsNullOrWhiteSpace(externalReply))
+        if (externalReply is null || string.IsNullOrWhiteSpace(externalReply.Message))
         {
             return null;
         }
 
+        var toolCalls = new List<ToolCallTrace>
+        {
+            new("ExternalChatService.ReplyAsync", new { message = envelope.Message }, "<text>", true)
+        };
+        toolCalls.AddRange(externalReply.ToolCalls);
+
         return new KernelExecutionResult(
-            externalReply,
+            externalReply.Message,
             null,
             "model:minimax",
             [],
-            [new ToolCallTrace("ExternalChatService.ReplyAsync", new { message = envelope.Message }, "<text>", true)]);
+            toolCalls);
     }
 }

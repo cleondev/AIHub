@@ -4,7 +4,7 @@ public sealed record AddConceptRequest(string Name);
 
 public sealed record AddToolRequest(string Name, string Description);
 
-public sealed record SetLlmConfigRequest(string Provider, string Model, string ApiBaseUrl);
+public sealed record SetLlmConfigRequest(string Provider, string Model, string ApiBaseUrl, string? ApiKey, string? GroupId);
 
 public sealed record ChatMessageRequest(
     string Message,

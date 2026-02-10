@@ -75,7 +75,9 @@ bind("btn-set-llm").addEventListener("click", async () => {
       body: JSON.stringify({
         provider: "minimax",
         model,
-        apiBaseUrl: "https://api.minimax.chat"
+        apiBaseUrl: "https://api.minimax.chat",
+        apiKey: bind("llm-api-key").value.trim() || null,
+        groupId: bind("llm-group-id").value.trim() || null
       })
     });
     target.textContent = pretty(data);
@@ -174,10 +176,18 @@ bind("btn-send-chat").addEventListener("click", async () => {
 
 const loadProducts = async () => {
   const keyword = bind("mock-keyword").value.trim();
+  const name = bind("mock-name").value.trim();
+  const category = bind("mock-category").value.trim();
   const target = bind("mock-result");
 
+  const query = new URLSearchParams();
+  if (keyword) query.set("keyword", keyword);
+  if (name) query.set("name", name);
+  if (category) query.set("category", category);
+
   try {
-    const data = await callApi(`/module/mock-api/products?keyword=${encodeURIComponent(keyword)}`);
+    const suffix = query.toString();
+    const data = await callApi(`/module/mock-api/products${suffix ? `?${suffix}` : ""}`);
     target.textContent = pretty(data);
   } catch (error) {
     target.textContent = error.message;

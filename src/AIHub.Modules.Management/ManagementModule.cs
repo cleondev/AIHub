@@ -2,7 +2,7 @@ namespace AIHub.Modules.Management;
 
 public sealed record KnowledgeConcept(Guid Id, string Name, DateTimeOffset CreatedAt);
 
-public sealed record LlmProviderConfig(string Provider, string Model, string ApiBaseUrl);
+public sealed record LlmProviderConfig(string Provider, string Model, string ApiBaseUrl, string? ApiKey = null, string? GroupId = null);
 
 public sealed record ToolDefinition(Guid Id, string Name, string Description, DateTimeOffset CreatedAt);
 
@@ -36,6 +36,27 @@ public sealed class ManagementService : IManagementService
     public LlmProviderConfig SetLlmConfig(LlmProviderConfig config)
     {
         _llmConfig = config;
+
+        if (!string.IsNullOrWhiteSpace(config.ApiKey))
+        {
+            Environment.SetEnvironmentVariable("MINIMAX_API_KEY", config.ApiKey);
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.GroupId))
+        {
+            Environment.SetEnvironmentVariable("MINIMAX_GROUP_ID", config.GroupId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.Model))
+        {
+            Environment.SetEnvironmentVariable("MINIMAX_MODEL", config.Model);
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.ApiBaseUrl))
+        {
+            Environment.SetEnvironmentVariable("MINIMAX_BASE_URL", config.ApiBaseUrl);
+        }
+
         return _llmConfig;
     }
 
