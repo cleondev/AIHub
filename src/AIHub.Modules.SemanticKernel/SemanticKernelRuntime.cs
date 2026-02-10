@@ -70,6 +70,11 @@ public sealed class SemanticKernelRuntime : ISemanticKernelRuntime
     public async Task<KernelExecutionResult> ExecuteAsync(AIRequestEnvelope envelope, CancellationToken cancellationToken = default)
     {
         var intent = ClassifyIntent(envelope.Message);
+        if (envelope.Policy.AllowExternalModel && !IsWorkflowIntent(intent))
+        {
+            intent = "GeneralChat";
+        }
+
         var preExecution = _requestPolicyGuard.Validate(envelope with { Message = envelope.Message.Trim() }) with { Intent = intent };
         if (!preExecution.IsAllowed)
         {
@@ -128,6 +133,12 @@ public sealed class SemanticKernelRuntime : ISemanticKernelRuntime
         }
 
         return "GeneralChat";
+    }
+
+    private static bool IsWorkflowIntent(string intent)
+    {
+        return string.Equals(intent, "CreateRequest", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(intent, "Approval", StringComparison.OrdinalIgnoreCase);
     }
 }
 
