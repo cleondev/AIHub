@@ -11,8 +11,9 @@ public sealed class ExternalChatServiceAdapter : IExternalChatService
         _minimaxChatService = minimaxChatService;
     }
 
-    public Task<string?> ReplyAsync(string message, CancellationToken cancellationToken = default)
+    public async Task<ExternalChatResult?> ReplyAsync(string message, CancellationToken cancellationToken = default)
     {
-        return _minimaxChatService.TrySendAsync(message, cancellationToken);
+        var result = await _minimaxChatService.TrySendAsync(message, cancellationToken);
+        return result is null ? null : new ExternalChatResult(result.Message, result.ToolCalls);
     }
 }

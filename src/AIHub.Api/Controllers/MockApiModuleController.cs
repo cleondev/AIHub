@@ -16,9 +16,12 @@ public sealed class MockApiModuleController : ControllerBase
     }
 
     [HttpGet("products")]
-    public ActionResult<ApiResponse<IEnumerable<ProductItem>>> ListProducts([FromQuery] string? keyword)
+    public ActionResult<ApiResponse<IEnumerable<ProductItem>>> ListProducts(
+        [FromQuery] string? keyword,
+        [FromQuery] string? name,
+        [FromQuery] string? category)
     {
-        return Ok(ApiResponse.From(_mockApiService.ListProducts(keyword), TraceIdProvider.GetFromHttpContext(HttpContext)));
+        return Ok(ApiResponse.From(_mockApiService.ListProducts(keyword, name, category), TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
 

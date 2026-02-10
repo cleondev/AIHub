@@ -8,7 +8,7 @@ public enum MockRequestStatus
 
 public sealed record MockRequest(Guid Id, string Name, MockRequestStatus Status, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt);
 
-public sealed record ProductItem(Guid Id, string Sku, string Name, decimal UnitPrice, int StockQuantity);
+public sealed record ProductItem(Guid Id, string Sku, string Name, string Category, decimal UnitPrice, int StockQuantity);
 
 public enum PurchaseRequestStatus
 {
@@ -33,7 +33,7 @@ public interface IMockApiService
     MockRequest Create(string name);
     MockRequest? Approve(Guid id);
 
-    IEnumerable<ProductItem> ListProducts(string? keyword);
+    IEnumerable<ProductItem> ListProducts(string? keyword, string? name, string? category);
     PurchaseRequest CreatePurchaseRequest(Guid productId, int quantity);
     IEnumerable<PurchaseRequest> ListPurchaseRequests();
 }
@@ -88,9 +88,11 @@ public sealed class MockApiService : IMockApiService
         return approved;
     }
 
-    public IEnumerable<ProductItem> ListProducts(string? keyword)
+    public IEnumerable<ProductItem> ListProducts(string? keyword, string? name, string? category)
     {
         var normalized = keyword?.Trim();
+        var normalizedName = name?.Trim();
+        var normalizedCategory = category?.Trim();
         var records = _products.Values.AsEnumerable();
 
         if (!string.IsNullOrWhiteSpace(normalized))
@@ -98,6 +100,16 @@ public sealed class MockApiService : IMockApiService
             records = records.Where(item =>
                 item.Name.Contains(normalized, StringComparison.OrdinalIgnoreCase)
                 || item.Sku.Contains(normalized, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.IsNullOrWhiteSpace(normalizedName))
+        {
+            records = records.Where(item => item.Name.Contains(normalizedName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (!string.IsNullOrWhiteSpace(normalizedCategory))
+        {
+            records = records.Where(item => item.Category.Contains(normalizedCategory, StringComparison.OrdinalIgnoreCase));
         }
 
         return records.OrderBy(item => item.Name);
@@ -156,9 +168,10 @@ public sealed class MockApiService : IMockApiService
     {
         var seed = new[]
         {
-            new ProductItem(Guid.Parse("0de8aca6-722f-4da9-bf5c-1a6884bc8476"), "SP-001", "Bàn phím cơ", 1290000m, 8),
-            new ProductItem(Guid.Parse("562cf6cf-4a09-4e37-95cc-bf4cbccf8f84"), "SP-002", "Chuột gaming", 790000m, 3),
-            new ProductItem(Guid.Parse("9e4ab5e8-6fca-4830-9ea1-d2c746ae8f3c"), "SP-003", "Tai nghe bluetooth", 990000m, 0)
+            new ProductItem(Guid.Parse("0de8aca6-722f-4da9-bf5c-1a6884bc8476"), "SP-001", "Bàn phím cơ", "Accessories", 1290000m, 8),
+            new ProductItem(Guid.Parse("562cf6cf-4a09-4e37-95cc-bf4cbccf8f84"), "SP-002", "Chuột gaming", "Accessories", 790000m, 3),
+            new ProductItem(Guid.Parse("9e4ab5e8-6fca-4830-9ea1-d2c746ae8f3c"), "SP-003", "Tai nghe bluetooth", "Audio", 990000m, 0),
+            new ProductItem(Guid.Parse("2dad9385-88db-44f0-b376-2837a8804ffa"), "SP-004", "Laptop AI Pro", "Laptop", 28990000m, 5)
         };
 
         foreach (var item in seed)
