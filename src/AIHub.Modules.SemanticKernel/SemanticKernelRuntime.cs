@@ -137,7 +137,8 @@ public sealed class SemanticKernelRuntime : ISemanticKernelRuntime
 
     private static bool IsWorkflowIntent(string intent)
     {
-        return string.Equals(intent, "CreateRequest", StringComparison.OrdinalIgnoreCase)
+        return string.Equals(intent, "ListKnowledge", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(intent, "CreateRequest", StringComparison.OrdinalIgnoreCase)
                || string.Equals(intent, "Approval", StringComparison.OrdinalIgnoreCase);
     }
 }
