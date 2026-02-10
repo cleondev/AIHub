@@ -32,8 +32,10 @@
       </article>
 
       <article class="card">
-        <h2>2) Module ChatBox</h2>
-        <textarea id="chat-input" rows="4" placeholder="VD: liệt kê abc / tạo def / approve <id>"></textarea>
+        <h2>2) Module ChatBox (Real-time)</h2>
+        <p id="chat-status">Đang kết nối realtime...</p>
+        <div id="chat-thread" class="chat-thread"></div>
+        <textarea id="chat-input" rows="3" placeholder="VD: liệt kê abc / tạo def / approve <id>"></textarea>
         <button id="btn-send-chat">Gửi chat</button>
         <pre id="chat-result">Chưa có dữ liệu.</pre>
       </article>
@@ -74,6 +76,7 @@
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
