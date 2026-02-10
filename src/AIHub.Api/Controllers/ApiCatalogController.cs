@@ -1,5 +1,5 @@
+using AIHub.Api.Application.ApiCatalog;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,32 +8,24 @@ namespace AIHub.Api.Controllers;
 [Route("api-catalog")]
 public sealed class ApiCatalogController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IApiCatalogService _apiCatalogService;
 
-    public ApiCatalogController(InMemoryStore store)
+    public ApiCatalogController(IApiCatalogService apiCatalogService)
     {
-        _store = store;
+        _apiCatalogService = apiCatalogService;
     }
 
     [HttpPost]
     public ActionResult<ApiResponse<ApiCatalogEntry>> Create([FromBody] ApiCatalogRequest request)
     {
-        var entry = new ApiCatalogEntry(
-            Id: Guid.NewGuid(),
-            Name: request.Name.Trim(),
-            Description: request.Description.Trim(),
-            Schema: request.Schema,
-            CreatedAt: DateTimeOffset.UtcNow);
-
-        _store.ApiCatalog[entry.Id] = entry;
-
+        var entry = _apiCatalogService.Create(request);
         return Ok(ApiResponse.From(entry, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
     [HttpGet]
     public ActionResult<ApiResponse<IEnumerable<ApiCatalogEntry>>> GetAll()
     {
-        var entries = _store.ApiCatalog.Values.OrderBy(entry => entry.Name);
+        var entries = _apiCatalogService.GetAll();
         return Ok(ApiResponse.From(entries, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 }

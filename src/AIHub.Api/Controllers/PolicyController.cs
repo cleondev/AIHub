@@ -1,5 +1,5 @@
+using AIHub.Api.Application.Policies;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,32 +8,24 @@ namespace AIHub.Api.Controllers;
 [Route("policies")]
 public sealed class PolicyController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IPolicyService _policyService;
 
-    public PolicyController(InMemoryStore store)
+    public PolicyController(IPolicyService policyService)
     {
-        _store = store;
+        _policyService = policyService;
     }
 
     [HttpGet]
     public ActionResult<ApiResponse<IEnumerable<PolicyDefinition>>> GetPolicies()
     {
-        var policies = _store.Policies.Values.OrderBy(policy => policy.Name);
+        var policies = _policyService.GetPolicies();
         return Ok(ApiResponse.From(policies, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
     [HttpPost]
     public ActionResult<ApiResponse<PolicyDefinition>> Create([FromBody] PolicyRequest request)
     {
-        var policy = new PolicyDefinition(
-            Id: Guid.NewGuid(),
-            Name: request.Name.Trim(),
-            Description: request.Description.Trim(),
-            Rules: request.Rules,
-            CreatedAt: DateTimeOffset.UtcNow);
-
-        _store.Policies[policy.Id] = policy;
-
+        var policy = _policyService.Create(request);
         return Ok(ApiResponse.From(policy, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 }

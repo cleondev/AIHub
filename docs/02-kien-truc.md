@@ -1,5 +1,41 @@
 # Kiến trúc chi tiết
 
+## Định hướng kiến trúc (bản cập nhật)
+AIHub đang được tổ chức theo hướng **Modular Monolith** để dễ mở rộng về sau sang microservices khi cần.
+Mỗi module nghiệp vụ có ranh giới rõ ràng:
+- **Knowledge**: tài liệu, truy vấn tri thức.
+- **Glossary**: thuật ngữ nội bộ.
+- **API Catalog**: metadata API/schema nghiệp vụ.
+- **Data Generation**: tạo dữ liệu AI dạng draft.
+- **Approval**: workflow phê duyệt draft.
+- **Policies**: rule/policy vận hành.
+- **Model Profiles**: cấu hình model/provider.
+
+## Cấu trúc tầng trong API
+```
+AIHub.Api
+├── Controllers/                # HTTP contract, validation mức transport
+├── Application/
+│   ├── Knowledge/
+│   ├── Glossary/
+│   ├── ApiCatalog/
+│   ├── DataGeneration/
+│   ├── Approval/
+│   ├── Policies/
+│   └── ModelProfiles/          # Use-case theo từng module
+├── Models/                     # DTO/record dùng chung cho API
+├── Services/
+│   └── InMemoryStore.cs        # Hạ tầng lưu trữ tạm (MVP)
+└── wwwroot/                    # UI MVP tĩnh
+```
+
+### Nguyên tắc tách module
+1. **Controller mỏng**: chỉ nhận/trả HTTP, không chứa business logic chính.
+2. **Business logic nằm ở Application service theo module**.
+3. **Không truy cập store trực tiếp từ controller**; chỉ đi qua service interface.
+4. **Dependency Injection theo interface** để dễ test và thay implementation.
+5. **Chuẩn hoá khả năng thay thế hạ tầng**: InMemoryStore là adapter tạm cho MVP.
+
 ## Sơ đồ thành phần (textual)
 ```
 [Web Portal]
