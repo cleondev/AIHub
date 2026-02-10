@@ -2,6 +2,33 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+## Build artifacts
+[Bb]in/
+[Oo]bj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Logs
+*.log
+
+## Test results
+[Tt]est[Rr]esult*/
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+
+## VS Code / Rider
+.vscode/
+.idea/
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
 /.vs
-/src/AIHub.Api/bin
-/src/AIHub.Api/obj

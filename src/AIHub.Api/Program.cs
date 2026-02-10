@@ -5,6 +5,7 @@ using AIHub.Api.Application.Glossary;
 using AIHub.Api.Application.Knowledge;
 using AIHub.Api.Application.ModelProfiles;
 using AIHub.Api.Application.Policies;
+using AIHub.Api.Hubs;
 using AIHub.Api.Services;
 using AIHub.Modules.ChatBox;
 using AIHub.Modules.Management;
@@ -14,7 +15,9 @@ using AIHub.Modules.Tooling;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<InMemoryStore>();
+builder.Services.AddSingleton<ChatRealtimeStore>();
 
 builder.Services.AddScoped<IKnowledgeService, KnowledgeService>();
 builder.Services.AddScoped<IGlossaryService, GlossaryService>();
@@ -36,5 +39,6 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();

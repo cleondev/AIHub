@@ -91,3 +91,26 @@ ol {
   color: #51607f;
   font-size: 14px;
 }
+
+.chat-thread {
+  border: 1px solid #d5daea;
+  background: #f8faff;
+  border-radius: 8px;
+  min-height: 160px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-item {
+  background: #eef3ff;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.chat-item strong {
+  color: #2f50d6;
+}

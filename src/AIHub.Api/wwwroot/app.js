@@ -75,12 +75,71 @@ bind("btn-get-llm").addEventListener("click", async () => {
   }
 });
 
+const chatResult = bind("chat-result");
+const chatStatus = bind("chat-status");
+const chatThread = bind("chat-thread");
+
+const appendChat = (item) => {
+  const line = document.createElement("div");
+  line.className = "chat-item";
+  const sentAt = item.sentAt ? new Date(item.sentAt).toLocaleTimeString("vi-VN") : "";
+  line.innerHTML = `<strong>${item.sender}</strong> <small>${sentAt}</small><div>${item.message}</div>`;
+  chatThread.appendChild(line);
+  chatThread.scrollTop = chatThread.scrollHeight;
+};
+
+let chatConnection = null;
+
+const startRealtimeChat = async () => {
+  if (!window.signalR) {
+    chatStatus.textContent = "Không tải được thư viện realtime. Sử dụng fallback API thường.";
+    return;
+  }
+
+  chatConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/hubs/chat")
+    .withAutomaticReconnect()
+    .build();
+
+  chatConnection.on("chat_history", (history) => {
+    chatThread.innerHTML = "";
+    history.forEach(appendChat);
+  });
+
+  chatConnection.on("chat_message", (item) => {
+    appendChat(item);
+  });
+
+  try {
+    await chatConnection.start();
+    await chatConnection.invoke("JoinRoom");
+    chatStatus.textContent = "Đã kết nối realtime.";
+  } catch (error) {
+    chatStatus.textContent = "Kết nối realtime thất bại. Sử dụng fallback API thường.";
+    chatResult.textContent = error.message;
+    chatConnection = null;
+  }
+};
+
+startRealtimeChat();
+
 bind("btn-send-chat").addEventListener("click", async () => {
   const message = bind("chat-input").value.trim();
-  const target = bind("chat-result");
   if (!message) {
-    target.textContent = "Vui lòng nhập nội dung chat.";
+    chatResult.textContent = "Vui lòng nhập nội dung chat.";
     return;
+  }
+
+  bind("chat-input").value = "";
+
+  if (chatConnection) {
+    try {
+      await chatConnection.invoke("SendMessage", message);
+      chatResult.textContent = "Đã gửi message realtime.";
+      return;
+    } catch (error) {
+      chatResult.textContent = `Realtime lỗi, fallback API: ${error.message}`;
+    }
   }
 
   try {
@@ -88,9 +147,9 @@ bind("btn-send-chat").addEventListener("click", async () => {
       method: "POST",
       body: JSON.stringify({ message })
     });
-    target.textContent = pretty(data);
+    chatResult.textContent = pretty(data);
   } catch (error) {
-    target.textContent = error.message;
+    chatResult.textContent = error.message;
   }
 });
 
