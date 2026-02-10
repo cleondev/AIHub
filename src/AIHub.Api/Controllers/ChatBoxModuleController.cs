@@ -16,9 +16,9 @@ public sealed class ChatBoxModuleController : ControllerBase
     }
 
     [HttpPost("message")]
-    public ActionResult<ApiResponse<ChatReply>> Send([FromBody] ChatMessageRequest request)
+    public async Task<ActionResult<ApiResponse<ChatReply>>> Send([FromBody] ChatMessageRequest request)
     {
-        var response = _chatBoxService.Send(request.Message);
+        var response = await _chatBoxService.SendAsync(request.Message, HttpContext.RequestAborted);
         return Ok(ApiResponse.From(response, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 }

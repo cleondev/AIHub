@@ -3,25 +3,35 @@ using AIHub.Modules.Tooling;
 
 namespace AIHub.Modules.ChatBox;
 
-public sealed record ChatReply(string Message, object? Data = null);
+public sealed record ChatReply(string Message, object? Data = null, string Source = "rule");
+
+public interface IExternalChatService
+{
+    Task<string?> ReplyAsync(string message, CancellationToken cancellationToken = default);
+}
 
 public interface IChatBoxService
 {
-    ChatReply Send(string message);
+    Task<ChatReply> SendAsync(string message, CancellationToken cancellationToken = default);
 }
 
 public sealed class ChatBoxService : IChatBoxService
 {
     private readonly IManagementService _managementService;
     private readonly IToolGateway _toolGateway;
+    private readonly IExternalChatService _externalChatService;
 
-    public ChatBoxService(IManagementService managementService, IToolGateway toolGateway)
+    public ChatBoxService(
+        IManagementService managementService,
+        IToolGateway toolGateway,
+        IExternalChatService externalChatService)
     {
         _managementService = managementService;
         _toolGateway = toolGateway;
+        _externalChatService = externalChatService;
     }
 
-    public ChatReply Send(string message)
+    public async Task<ChatReply> SendAsync(string message, CancellationToken cancellationToken = default)
     {
         var normalized = message.Trim();
 
@@ -57,6 +67,12 @@ public sealed class ChatBoxService : IChatBoxService
         if (matched.Count > 0)
         {
             return new ChatReply($"Đã query API và thấy {matched.Count} bản ghi liên quan '{normalized}'.", matched);
+        }
+
+        var externalReply = await _externalChatService.ReplyAsync(normalized, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(externalReply))
+        {
+            return new ChatReply(externalReply, Source: "minimax");
         }
 
         return new ChatReply("Tôi chưa hiểu yêu cầu. Gợi ý: 'liệt kê abc', 'tạo def', hoặc 'approve <request-id>'.");

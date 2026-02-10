@@ -20,3 +20,23 @@ Solution đã tách thành các project riêng biệt:
 2. Qua ChatBox nhập `liệt kê abc` để AI trả danh sách tri thức.
 3. Nhập `tạo def` để tạo request trạng thái `Pending`.
 4. Approve request bằng chat `approve <request-id>` hoặc nút approve để chuyển `Approved`.
+
+
+## Bật chat AI thật với Minimax
+Để ChatBox phản hồi bằng AI thật (thay vì chỉ rule-based), cấu hình biến môi trường trước khi chạy API:
+- `MINIMAX_API_KEY`: API key từ Minimax.
+- `MINIMAX_GROUP_ID`: Group ID trong tài khoản Minimax.
+- `MINIMAX_MODEL` (tuỳ chọn): mặc định `abab6.5s-chat`.
+- `MINIMAX_BASE_URL` (tuỳ chọn): mặc định `https://api.minimax.chat`.
+
+Ví dụ:
+```bash
+export MINIMAX_API_KEY=your_key
+export MINIMAX_GROUP_ID=your_group_id
+export MINIMAX_MODEL=abab6.5s-chat
+dotnet run --project src/AIHub.Api
+```
+
+Luồng xử lý chat hiện tại:
+1. Ưu tiên các lệnh nghiệp vụ (`liệt kê`, `tạo`, `approve`) như trước.
+2. Nếu không khớp rule, hệ thống gọi Minimax để trả lời realtime.
