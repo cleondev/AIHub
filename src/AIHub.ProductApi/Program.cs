@@ -1,5 +1,7 @@
 using AIHub.ProductApi.Services;
 
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
