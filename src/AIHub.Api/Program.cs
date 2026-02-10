@@ -11,6 +11,7 @@ using AIHub.Modules.ChatBox;
 using AIHub.Modules.Management;
 using AIHub.Modules.MockApi;
 using AIHub.Modules.Tooling;
+using AIHub.Modules.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,13 @@ builder.Services.AddSingleton<IMockApiService, MockApiService>();
 builder.Services.AddSingleton<IToolGateway, ToolGateway>();
 builder.Services.AddHttpClient<IMinimaxChatService, MinimaxChatService>();
 builder.Services.AddSingleton<IExternalChatService, ExternalChatServiceAdapter>();
+
+builder.Services.AddSingleton<IRequestPolicyGuard, DefaultRequestPolicyGuard>();
+builder.Services.AddSingleton<IResponsePolicyGuard, DefaultResponsePolicyGuard>();
+builder.Services.AddSingleton<ISemanticKernelPlugin, KnowledgePlugin>();
+builder.Services.AddSingleton<ISemanticKernelPlugin, RequestWorkflowPlugin>();
+builder.Services.AddSingleton<ISemanticKernelPlugin, ExternalChatPlugin>();
+builder.Services.AddSingleton<ISemanticKernelRuntime, SemanticKernelRuntime>();
 builder.Services.AddSingleton<IChatBoxService, ChatBoxService>();
 
 var app = builder.Build();

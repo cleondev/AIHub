@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AIHub.Modules.Management\AIHub.Modules.Management.csproj" />
     <ProjectReference Include="..\AIHub.Modules.ChatBox\AIHub.Modules.ChatBox.csproj" />
+    <ProjectReference Include="..\AIHub.Modules.SemanticKernel\AIHub.Modules.SemanticKernel.csproj" />
     <ProjectReference Include="..\AIHub.Modules.MockApi\AIHub.Modules.MockApi.csproj" />
     <ProjectReference Include="..\AIHub.Modules.Tooling\AIHub.Modules.Tooling.csproj" />
   </ItemGroup>

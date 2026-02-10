@@ -13,6 +13,7 @@ Solution đã tách thành các project riêng biệt:
 - `AIHub.Modules.ChatBox`: xử lý hội thoại, gọi module quản lý + tool.
 - `AIHub.Modules.MockApi`: API giả lập với flow `query/create/approve`.
 - `AIHub.Modules.Tooling`: module tool để đọc/ghi sang mock API.
+- `AIHub.Modules.SemanticKernel`: orchestration runtime trung tâm (envelope, policy guards, plugin contract).
 - `AIHub.Api`: host Web API + dashboard để chạy kịch bản end-to-end.
 
 ## Kịch bản demo mong muốn
