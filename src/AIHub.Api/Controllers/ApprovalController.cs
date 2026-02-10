@@ -1,5 +1,5 @@
+using AIHub.Api.Application.Approval;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,31 +8,22 @@ namespace AIHub.Api.Controllers;
 [Route("approval")]
 public sealed class ApprovalController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IApprovalService _approvalService;
 
-    public ApprovalController(InMemoryStore store)
+    public ApprovalController(IApprovalService approvalService)
     {
-        _store = store;
+        _approvalService = approvalService;
     }
 
     [HttpPost("{id:guid}/approve")]
     public ActionResult<ApiResponse<DataGenerationDraft>> Approve([FromRoute] Guid id, [FromBody] ApprovalRequest request)
     {
-        if (!_store.DataDrafts.TryGetValue(id, out var draft))
+        var approved = _approvalService.Approve(id, request);
+        if (approved is null)
         {
             var error = new ErrorResponse("draft_not_found", "Không tìm thấy bản nháp.");
             return NotFound(ApiResponse.From(error, TraceIdProvider.GetFromHttpContext(HttpContext)));
         }
-
-        var approved = draft with
-        {
-            Status = DraftStatus.Approved,
-            ApprovedBy = request.Actor.Trim(),
-            ApprovalComment = request.Comment?.Trim(),
-            UpdatedAt = DateTimeOffset.UtcNow
-        };
-
-        _store.DataDrafts[id] = approved;
 
         return Ok(ApiResponse.From(approved, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
@@ -40,21 +31,12 @@ public sealed class ApprovalController : ControllerBase
     [HttpPost("{id:guid}/reject")]
     public ActionResult<ApiResponse<DataGenerationDraft>> Reject([FromRoute] Guid id, [FromBody] ApprovalRequest request)
     {
-        if (!_store.DataDrafts.TryGetValue(id, out var draft))
+        var rejected = _approvalService.Reject(id, request);
+        if (rejected is null)
         {
             var error = new ErrorResponse("draft_not_found", "Không tìm thấy bản nháp.");
             return NotFound(ApiResponse.From(error, TraceIdProvider.GetFromHttpContext(HttpContext)));
         }
-
-        var rejected = draft with
-        {
-            Status = DraftStatus.Rejected,
-            ApprovedBy = request.Actor.Trim(),
-            ApprovalComment = request.Comment?.Trim(),
-            UpdatedAt = DateTimeOffset.UtcNow
-        };
-
-        _store.DataDrafts[id] = rejected;
 
         return Ok(ApiResponse.From(rejected, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }

@@ -1,5 +1,5 @@
+using AIHub.Api.Application.Glossary;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,31 +8,24 @@ namespace AIHub.Api.Controllers;
 [Route("glossary")]
 public sealed class GlossaryController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IGlossaryService _glossaryService;
 
-    public GlossaryController(InMemoryStore store)
+    public GlossaryController(IGlossaryService glossaryService)
     {
-        _store = store;
+        _glossaryService = glossaryService;
     }
 
     [HttpPost("terms")]
     public ActionResult<ApiResponse<GlossaryTerm>> CreateTerm([FromBody] GlossaryTermRequest request)
     {
-        var term = new GlossaryTerm(
-            Id: Guid.NewGuid(),
-            Term: request.Term.Trim(),
-            Definition: request.Definition.Trim(),
-            CreatedAt: DateTimeOffset.UtcNow);
-
-        _store.GlossaryTerms[term.Id] = term;
-
+        var term = _glossaryService.CreateTerm(request);
         return Ok(ApiResponse.From(term, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
     [HttpGet("terms")]
     public ActionResult<ApiResponse<IEnumerable<GlossaryTerm>>> GetTerms()
     {
-        var terms = _store.GlossaryTerms.Values.OrderBy(term => term.Term);
+        var terms = _glossaryService.GetTerms();
         return Ok(ApiResponse.From(terms, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 }
