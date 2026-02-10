@@ -1,5 +1,5 @@
+using AIHub.Api.Application.ModelProfiles;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,33 +8,24 @@ namespace AIHub.Api.Controllers;
 [Route("models")]
 public sealed class ModelProfilesController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IModelProfileService _modelProfileService;
 
-    public ModelProfilesController(InMemoryStore store)
+    public ModelProfilesController(IModelProfileService modelProfileService)
     {
-        _store = store;
+        _modelProfileService = modelProfileService;
     }
 
     [HttpGet]
     public ActionResult<ApiResponse<IEnumerable<ModelProfile>>> GetModels()
     {
-        var models = _store.ModelProfiles.Values.OrderBy(model => model.Name);
+        var models = _modelProfileService.GetModels();
         return Ok(ApiResponse.From(models, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
     [HttpPost]
     public ActionResult<ApiResponse<ModelProfile>> Create([FromBody] ModelProfileRequest request)
     {
-        var model = new ModelProfile(
-            Id: Guid.NewGuid(),
-            Name: request.Name.Trim(),
-            Provider: request.Provider.Trim(),
-            Model: request.Model.Trim(),
-            Temperature: request.Temperature,
-            CreatedAt: DateTimeOffset.UtcNow);
-
-        _store.ModelProfiles[model.Id] = model;
-
+        var model = _modelProfileService.Create(request);
         return Ok(ApiResponse.From(model, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 }

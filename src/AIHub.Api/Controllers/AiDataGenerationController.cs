@@ -1,5 +1,5 @@
+using AIHub.Api.Application.DataGeneration;
 using AIHub.Api.Models;
-using AIHub.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIHub.Api.Controllers;
@@ -8,34 +8,25 @@ namespace AIHub.Api.Controllers;
 [Route("ai/data-generation")]
 public sealed class AiDataGenerationController : ControllerBase
 {
-    private readonly InMemoryStore _store;
+    private readonly IDataGenerationService _dataGenerationService;
 
-    public AiDataGenerationController(InMemoryStore store)
+    public AiDataGenerationController(IDataGenerationService dataGenerationService)
     {
-        _store = store;
+        _dataGenerationService = dataGenerationService;
     }
 
     [HttpPost]
     public ActionResult<ApiResponse<DataGenerationDraft>> CreateDraft([FromBody] AiDataGenerationRequest request)
     {
-        var draft = new DataGenerationDraft(
-            Id: Guid.NewGuid(),
-            Prompt: request.Prompt.Trim(),
-            SchemaRef: request.SchemaRef,
-            Status: DraftStatus.PendingApproval,
-            Payload: request.SeedPayload,
-            CreatedAt: DateTimeOffset.UtcNow,
-            UpdatedAt: DateTimeOffset.UtcNow);
-
-        _store.DataDrafts[draft.Id] = draft;
-
+        var draft = _dataGenerationService.CreateDraft(request);
         return Ok(ApiResponse.From(draft, TraceIdProvider.GetFromHttpContext(HttpContext)));
     }
 
     [HttpGet("{id:guid}")]
     public ActionResult<ApiResponse<DataGenerationDraft>> GetDraft([FromRoute] Guid id)
     {
-        if (!_store.DataDrafts.TryGetValue(id, out var draft))
+        var draft = _dataGenerationService.GetDraft(id);
+        if (draft is null)
         {
             var error = new ErrorResponse("draft_not_found", "Không tìm thấy bản nháp.");
             return NotFound(ApiResponse.From(error, TraceIdProvider.GetFromHttpContext(HttpContext)));
