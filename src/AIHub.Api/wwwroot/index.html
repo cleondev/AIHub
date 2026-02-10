@@ -10,12 +10,32 @@
   <main class="container">
     <header>
       <h1>AIHub Dashboard (Modular)</h1>
-      <p>Demo 4 module riêng: Management, ChatBox, Mock API mô phỏng mua hàng, Tool Gateway.</p>
+      <p>Giao diện tab theo tác vụ: chat AI, quản lý, sản phẩm và đơn hàng.</p>
     </header>
 
-    <section class="grid">
-      <article class="card card-wide">
-        <h2>1) Module Management</h2>
+    <nav class="tabs" aria-label="Điều hướng module">
+      <button class="tab-button active" data-tab="chat">Chat</button>
+      <button class="tab-button" data-tab="management">Quản lý</button>
+      <button class="tab-button" data-tab="products">Sản phẩm</button>
+      <button class="tab-button" data-tab="orders">Đơn hàng</button>
+      <button class="tab-button" data-tab="tool">Tool</button>
+      <button class="tab-button" data-tab="guide">Kịch bản</button>
+    </nav>
+
+    <section class="tab-panel active" data-panel="chat">
+      <article class="card">
+        <h2>ChatBox (Real-time)</h2>
+        <p id="chat-status">Đang kết nối realtime...</p>
+        <div id="chat-thread" class="chat-thread"></div>
+        <textarea id="chat-input" rows="3" placeholder="VD: liệt kê abc / tạo def / approve <id>"></textarea>
+        <button id="btn-send-chat">Gửi chat</button>
+        <pre id="chat-result">Chưa có dữ liệu.</pre>
+      </article>
+    </section>
+
+    <section class="tab-panel" data-panel="management">
+      <article class="card">
+        <h2>Module Management</h2>
         <label for="concept-name">Thêm khái niệm</label>
         <div class="button-row">
           <input id="concept-name" type="text" placeholder="VD: abc" />
@@ -30,28 +50,35 @@
         </div>
         <pre id="management-result">Chưa có dữ liệu.</pre>
       </article>
+    </section>
 
+    <section class="tab-panel" data-panel="products">
       <article class="card">
-        <h2>2) Module ChatBox (Real-time)</h2>
-        <p id="chat-status">Đang kết nối realtime...</p>
-        <div id="chat-thread" class="chat-thread"></div>
-        <textarea id="chat-input" rows="3" placeholder="VD: liệt kê abc / tạo def / approve <id>"></textarea>
-        <button id="btn-send-chat">Gửi chat</button>
-        <pre id="chat-result">Chưa có dữ liệu.</pre>
-      </article>
-
-      <article class="card">
-        <h2>3) Module Mock API (Sản phẩm mua hàng)</h2>
+        <h2>Mock API - Danh sách sản phẩm</h2>
         <input id="mock-keyword" type="text" placeholder="Tìm theo tên/SKU sản phẩm" />
-        <button id="btn-mock-list-products">List products</button>
+        <div class="button-row">
+          <button id="btn-mock-list-products">Danh sách sản phẩm</button>
+          <button id="btn-mock-refresh-orders">Tải danh sách đơn hàng</button>
+        </div>
         <input id="mock-product-id" type="text" placeholder="Product ID" />
         <input id="mock-quantity" type="number" min="1" value="1" placeholder="Số lượng mua" />
         <button id="btn-mock-create-order">Tạo request mua hàng</button>
         <pre id="mock-result">Chưa có dữ liệu.</pre>
       </article>
+    </section>
 
+    <section class="tab-panel" data-panel="orders">
       <article class="card">
-        <h2>4) Module Tool (Read/Write API)</h2>
+        <h2>Danh sách order</h2>
+        <p>Xem các request đã tạo, bao gồm trạng thái thành công và hết hàng.</p>
+        <button id="btn-mock-list-orders">Lấy danh sách order</button>
+        <pre id="orders-result">Chưa có dữ liệu.</pre>
+      </article>
+    </section>
+
+    <section class="tab-panel" data-panel="tool">
+      <article class="card">
+        <h2>Module Tool (Read/Write API)</h2>
         <input id="tool-keyword" type="text" placeholder="Từ khóa đọc API" />
         <div class="button-row">
           <button id="btn-tool-read">Tool Read</button>
@@ -61,15 +88,17 @@
         <button id="btn-tool-approve">Tool Write Approve</button>
         <pre id="tool-result">Chưa có dữ liệu.</pre>
       </article>
+    </section>
 
-      <article class="card card-wide">
+    <section class="tab-panel" data-panel="guide">
+      <article class="card">
         <h2>Kịch bản kỳ vọng</h2>
         <ol>
-          <li>Mở Management, thêm khái niệm <strong>abc</strong>.</li>
-          <li>Qua ChatBox nhập: <code>liệt kê abc</code> để AI query API và trả thông tin.</li>
-          <li>Qua Mock API, bấm <strong>List products</strong> để xem tồn kho hiện tại.</li>
+          <li>Mặc định vào tab <strong>Chat</strong> để trao đổi với AI.</li>
+          <li>Chuyển tab <strong>Quản lý</strong>, thêm khái niệm <strong>abc</strong>.</li>
+          <li>Qua tab <strong>Sản phẩm</strong>, bấm <strong>Danh sách sản phẩm</strong> để xem tồn kho hiện tại.</li>
           <li>Nhập <code>Product ID</code> + số lượng rồi tạo request mua hàng.</li>
-          <li>Nếu số lượng vượt tồn kho, API trả trạng thái <strong>RejectedOutOfStock</strong>.</li>
+          <li>Chuyển tab <strong>Đơn hàng</strong> để theo dõi trạng thái tạo đơn.</li>
         </ol>
       </article>
     </section>

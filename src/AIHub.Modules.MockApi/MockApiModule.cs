@@ -35,6 +35,7 @@ public interface IMockApiService
 
     IEnumerable<ProductItem> ListProducts(string? keyword);
     PurchaseRequest CreatePurchaseRequest(Guid productId, int quantity);
+    IEnumerable<PurchaseRequest> ListPurchaseRequests();
 }
 
 public sealed class MockApiService : IMockApiService
@@ -42,6 +43,8 @@ public sealed class MockApiService : IMockApiService
     private readonly Dictionary<Guid, MockRequest> _requests = [];
 
     private readonly Dictionary<Guid, ProductItem> _products = new();
+
+    private readonly List<PurchaseRequest> _purchaseRequests = [];
 
     public MockApiService()
     {
@@ -114,7 +117,7 @@ public sealed class MockApiService : IMockApiService
 
         if (quantity > product.StockQuantity)
         {
-            return new PurchaseRequest(
+            var rejected = new PurchaseRequest(
                 Guid.NewGuid(),
                 product.Id,
                 product.Sku,
@@ -123,11 +126,14 @@ public sealed class MockApiService : IMockApiService
                 PurchaseRequestStatus.RejectedOutOfStock,
                 $"Sản phẩm '{product.Name}' đã hết hoặc không đủ tồn kho. Tồn hiện tại: {product.StockQuantity}.",
                 DateTimeOffset.UtcNow);
+
+            _purchaseRequests.Add(rejected);
+            return rejected;
         }
 
         _products[product.Id] = product with { StockQuantity = product.StockQuantity - quantity };
 
-        return new PurchaseRequest(
+        var created = new PurchaseRequest(
             Guid.NewGuid(),
             product.Id,
             product.Sku,
@@ -136,6 +142,14 @@ public sealed class MockApiService : IMockApiService
             PurchaseRequestStatus.Created,
             $"Đã tạo request mua hàng thành công cho '{product.Name}' với số lượng {quantity}.",
             DateTimeOffset.UtcNow);
+
+        _purchaseRequests.Add(created);
+        return created;
+    }
+
+    public IEnumerable<PurchaseRequest> ListPurchaseRequests()
+    {
+        return _purchaseRequests.OrderByDescending(item => item.CreatedAt);
     }
 
     private void SeedProducts()
