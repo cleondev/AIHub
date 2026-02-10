@@ -15,29 +15,20 @@ async function callApi(path, options = {}) {
   return body;
 }
 
-document.getElementById("btn-health").addEventListener("click", async () => {
-  const target = document.getElementById("health-result");
-  try {
-    const data = await callApi("/health");
-    target.textContent = pretty(data);
-  } catch (error) {
-    target.textContent = error.message;
-  }
-});
+const bind = (id) => document.getElementById(id);
 
-document.getElementById("btn-query").addEventListener("click", async () => {
-  const target = document.getElementById("query-result");
-  const query = document.getElementById("knowledge-query").value.trim();
-
-  if (!query) {
-    target.textContent = "Vui lòng nhập câu hỏi.";
+bind("btn-add-concept").addEventListener("click", async () => {
+  const name = bind("concept-name").value.trim();
+  const target = bind("management-result");
+  if (!name) {
+    target.textContent = "Vui lòng nhập tên khái niệm.";
     return;
   }
 
   try {
-    const data = await callApi("/knowledge/query", {
+    const data = await callApi("/module/management/concepts", {
       method: "POST",
-      body: JSON.stringify({ query, topK: 3, constraints: {} })
+      body: JSON.stringify({ name })
     });
     target.textContent = pretty(data);
   } catch (error) {
@@ -45,103 +36,145 @@ document.getElementById("btn-query").addEventListener("click", async () => {
   }
 });
 
-document.getElementById("btn-term").addEventListener("click", async () => {
-  const target = document.getElementById("term-result");
-  const term = document.getElementById("term-name").value.trim();
-  const definition = document.getElementById("term-definition").value.trim();
-
-  if (!term || !definition) {
-    target.textContent = "Vui lòng nhập đầy đủ thuật ngữ và định nghĩa.";
-    return;
-  }
-
+bind("btn-list-concepts").addEventListener("click", async () => {
+  const target = bind("management-result");
   try {
-    const data = await callApi("/glossary/terms", {
-      method: "POST",
-      body: JSON.stringify({ term, definition, tags: [] })
-    });
+    const data = await callApi("/module/management/concepts");
     target.textContent = pretty(data);
   } catch (error) {
     target.textContent = error.message;
   }
 });
 
-document.getElementById("btn-load-terms").addEventListener("click", async () => {
-  const list = document.getElementById("term-list");
-  list.innerHTML = "";
+bind("btn-set-llm").addEventListener("click", async () => {
+  const model = bind("llm-model").value.trim();
+  const target = bind("management-result");
 
   try {
-    const data = await callApi("/glossary/terms");
-    const terms = data.data ?? [];
-
-    if (!terms.length) {
-      list.innerHTML = "<li>Chưa có thuật ngữ nào.</li>";
-      return;
-    }
-
-    terms.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.term}: ${item.definition}`;
-      list.appendChild(li);
-    });
-  } catch (error) {
-    const li = document.createElement("li");
-    li.textContent = error.message;
-    list.appendChild(li);
-  }
-});
-
-
-async function loadToolMock(type) {
-  const result = document.getElementById("tool-result");
-
-  try {
-    const response = await fetch("/mock-tool-data.txt");
-
-    if (!response.ok) {
-      throw new Error(`Không đọc được file mock-tool-data.txt (${response.status}).`);
-    }
-
-    const content = await response.text();
-    const lines = content
-      .split("\n")
-      .map((line) => line.trim())
-      .filter((line) => line && !line.startsWith("#"));
-
-    const records = lines
-      .map((line) => {
-        const [recordType, ...segments] = line.split("|");
-        const item = { type: recordType };
-
-        segments.forEach((segment) => {
-          const [key, ...rest] = segment.split("=");
-          item[key] = rest.join("=");
-        });
-
-        return item;
+    const data = await callApi("/module/management/llm-config", {
+      method: "POST",
+      body: JSON.stringify({
+        provider: "minimax",
+        model,
+        apiBaseUrl: "https://api.minimax.chat"
       })
-      .filter((item) => item.type === type)
-      .map((item) => ({
-        ...item,
-        sample_result: item.sample_result ? JSON.parse(item.sample_result) : undefined,
-        sample_response: item.sample_response ? JSON.parse(item.sample_response) : undefined
-      }));
-
-    if (!records.length) {
-      result.textContent = `Không có mock cho nhóm ${type}.`;
-      return;
-    }
-
-    result.textContent = pretty(records);
+    });
+    target.textContent = pretty(data);
   } catch (error) {
-    result.textContent = error.message;
+    target.textContent = error.message;
   }
-}
-
-document.getElementById("btn-tool-db").addEventListener("click", async () => {
-  await loadToolMock("DB");
 });
 
-document.getElementById("btn-tool-api").addEventListener("click", async () => {
-  await loadToolMock("API");
+bind("btn-get-llm").addEventListener("click", async () => {
+  const target = bind("management-result");
+  try {
+    const data = await callApi("/module/management/llm-config");
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-send-chat").addEventListener("click", async () => {
+  const message = bind("chat-input").value.trim();
+  const target = bind("chat-result");
+  if (!message) {
+    target.textContent = "Vui lòng nhập nội dung chat.";
+    return;
+  }
+
+  try {
+    const data = await callApi("/module/chatbox/message", {
+      method: "POST",
+      body: JSON.stringify({ message })
+    });
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-mock-create").addEventListener("click", async () => {
+  const name = bind("mock-name").value.trim();
+  const target = bind("mock-result");
+  if (!name) {
+    target.textContent = "Vui lòng nhập tên request.";
+    return;
+  }
+
+  try {
+    const data = await callApi("/module/mock-api/create", {
+      method: "POST",
+      body: JSON.stringify({ name })
+    });
+    target.textContent = pretty(data);
+    bind("mock-approve-id").value = data.data.id;
+    bind("tool-approve-id").value = data.data.id;
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-mock-query").addEventListener("click", async () => {
+  const keyword = bind("mock-name").value.trim();
+  const target = bind("mock-result");
+
+  try {
+    const data = await callApi(`/module/mock-api/query?keyword=${encodeURIComponent(keyword)}`);
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-mock-approve").addEventListener("click", async () => {
+  const id = bind("mock-approve-id").value.trim();
+  const target = bind("mock-result");
+
+  try {
+    const data = await callApi(`/module/mock-api/approve/${id}`, { method: "POST" });
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-tool-read").addEventListener("click", async () => {
+  const keyword = bind("tool-keyword").value.trim();
+  const target = bind("tool-result");
+
+  try {
+    const data = await callApi(`/module/tool/read?keyword=${encodeURIComponent(keyword)}`);
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-tool-create").addEventListener("click", async () => {
+  const name = bind("tool-keyword").value.trim() || "def";
+  const target = bind("tool-result");
+
+  try {
+    const data = await callApi("/module/tool/write/create", {
+      method: "POST",
+      body: JSON.stringify({ name })
+    });
+    target.textContent = pretty(data);
+    bind("tool-approve-id").value = data.data.id;
+  } catch (error) {
+    target.textContent = error.message;
+  }
+});
+
+bind("btn-tool-approve").addEventListener("click", async () => {
+  const id = bind("tool-approve-id").value.trim();
+  const target = bind("tool-result");
+
+  try {
+    const data = await callApi(`/module/tool/write/approve/${id}`, { method: "POST" });
+    target.textContent = pretty(data);
+  } catch (error) {
+    target.textContent = error.message;
+  }
 });
