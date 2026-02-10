@@ -42,9 +42,11 @@
           <button id="btn-add-concept">Thêm</button>
           <button id="btn-list-concepts">Liệt kê</button>
         </div>
-        <label for="llm-model">LLM config (tạm dùng minimax)</label>
+        <label for="llm-model">LLM config (Minimax)</label>
         <div class="button-row">
           <input id="llm-model" type="text" value="MiniMax-Text-01" />
+          <input id="llm-api-key" type="password" placeholder="Minimax API key" />
+          <input id="llm-group-id" type="text" placeholder="Minimax group id" />
           <button id="btn-set-llm">Cập nhật LLM</button>
           <button id="btn-get-llm">Xem LLM</button>
         </div>
@@ -55,7 +57,9 @@
     <section class="tab-panel" data-panel="products">
       <article class="card">
         <h2>Mock API - Danh sách sản phẩm</h2>
-        <input id="mock-keyword" type="text" placeholder="Tìm theo tên/SKU sản phẩm" />
+        <input id="mock-keyword" type="text" placeholder="Từ khóa (name/SKU)" />
+        <input id="mock-name" type="text" placeholder="Lọc theo tên" />
+        <input id="mock-category" type="text" placeholder="Lọc theo category" />
         <div class="button-row">
           <button id="btn-mock-list-products">Danh sách sản phẩm</button>
           <button id="btn-mock-refresh-orders">Tải danh sách đơn hàng</button>
@@ -96,8 +100,8 @@
         <ol>
           <li>Mặc định vào tab <strong>Chat</strong> để trao đổi với AI.</li>
           <li>Chuyển tab <strong>Quản lý</strong>, thêm khái niệm <strong>abc</strong>.</li>
-          <li>Qua tab <strong>Sản phẩm</strong>, bấm <strong>Danh sách sản phẩm</strong> để xem tồn kho hiện tại.</li>
-          <li>Nhập <code>Product ID</code> + số lượng rồi tạo request mua hàng.</li>
+          <li>Qua tab <strong>Sản phẩm</strong>, thử lọc theo <code>name</code> / <code>category</code> để xem API đổi tham số.</li>
+          <li>Ở tab <strong>Chat</strong>, hỏi: <em>"liệt kê sản phẩm category accessories"</em> hoặc <em>"tạo order productId ... quantity 1"</em> để AI gọi API.</li>
           <li>Chuyển tab <strong>Đơn hàng</strong> để theo dõi trạng thái tạo đơn.</li>
         </ol>
       </article>

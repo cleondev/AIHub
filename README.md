@@ -41,3 +41,14 @@ dotnet run --project src/AIHub.Api
 Luồng xử lý chat hiện tại:
 1. Ưu tiên các lệnh nghiệp vụ (`liệt kê`, `tạo`, `approve`) như trước.
 2. Nếu không khớp rule, hệ thống gọi Minimax để trả lời realtime.
+
+
+## Demo gọi API bằng LLM (Minimax)
+Sau khi nhập `API key` + `Group ID` ở tab **Quản lý** (hoặc set env), ChatBox có thể tự gọi API nội bộ:
+- Hỏi danh sách sản phẩm: `liệt kê sản phẩm category accessories`
+- Lọc theo tên/category: `xem sản phẩm name chuột category accessories`
+- Tạo order: `tạo order productId <guid> quantity 1`
+
+LLM sẽ thực hiện tool-call đến mock API:
+- `list_products(keyword,name,category)`
+- `create_order(productId,quantity)`
